@@ -1,0 +1,30 @@
+version: "23.10"
+services:
+  rms_norm:
+    build:
+      context: .
+      args:
+        USER_ID: ${USER_ID}
+        USERNAME: ${USERNAME}
+    image: ${IMAGE_NAME}
+    tty: true
+    stdin_open: true
+    ipc: host
+    pid: host
+    user: "${USER_ID}"
+    env_file: .env
+    volumes:
+      - "${CUR_DIR}:/app"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            capabilities: [gpu]
+    logging:
+      driver: "journald"
