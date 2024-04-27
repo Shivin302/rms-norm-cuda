@@ -1,5 +1,24 @@
 import torch
 import torch.nn as nn
+from loguru import logger
+import sys
+import os
+
+def configure_logger():
+    default_format = " | ".join([
+        "<green>{time:YYYY-MM-DD HH:mm:ss.SS}</green>",
+        "<cyan>{module: >14.14}</cyan>:<cyan>{line: <4}</cyan> <cyan>{function: <16.16}</cyan>",
+        "<level>{level.icon} {message}</level>",
+    ])
+    logger.configure(handlers=[dict(sink=sys.stderr, format=default_format, level='INFO')])
+
+    # logger = logger.opt(colors=True)
+    # logger.opt = partial(logger.opt, colors=True)
+
+    logger.level("SUCCESS", icon="✅")
+    logger.level("WARNING", icon="🟡")
+    logger.level("INFO", icon="ℹ︎")
+
 
 class RMSNorm(nn.Module):
     def __init__(self, hidden_size, eps=1e-6):
@@ -15,6 +34,7 @@ class RMSNorm(nn.Module):
         return self.weight * hidden_states.to(input_dtype)
 
 def main():
+    logger.info("Testing RMSNorm")
     batch_size = 32
     query_length = 100
     model_dim = 4096
@@ -24,4 +44,5 @@ def main():
     
 
 if __name__ == "__main__":
+    configure_logger()
     main()
