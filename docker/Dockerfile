@@ -9,11 +9,11 @@ RUN apt-get install -y git
 # add python requirements
 ADD requirements.txt /app/
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r /app/requirements.txt
 
 COPY . .
-RUN python setup.py install
+# RUN python setup.py install
 # RUN pip install -e .
 
 WORKDIR /
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/docker/entrypoint.sh"]

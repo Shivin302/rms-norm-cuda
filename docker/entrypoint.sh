@@ -4,9 +4,7 @@ set -e
 
 echo "Starting pipeline"
 
-# cd $path
-export MPLCONFIGDIR=$(mktemp -d)
-
-python /app/rms_torch.py
+cd /app
+python rms_torch.py
 
 echo "Finished pipeline"

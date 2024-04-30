@@ -68,7 +68,7 @@ void rms_norm_wrapper(torch::Tensor input, torch::Tensor output, torch::Tensor w
         eps);
 }
 
-PYBIND11_MODULE(rms_norm_cuda_ext, m)
+PYBIND11_MODULE(rms_norm_cuda_base, m)
 {
     m.def("rms_norm_kernel", &rms_norm_wrapper, "RMS normalization kernel (CUDA)");
 }

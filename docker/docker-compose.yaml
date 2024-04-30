@@ -14,12 +14,10 @@ services:
     user: "${USER_ID}"
     env_file: .env
     volumes:
-      - "${CUR_DIR}:/app"
+      - "${CUR_DIR}/..:/app"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=0
     deploy:
       resources:
         reservations:
