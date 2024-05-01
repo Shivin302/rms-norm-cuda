@@ -5,6 +5,7 @@ set -e
 echo "Starting pipeline"
 
 cd /app
-python rms_torch.py
+pytest
+python run_rms.py
 
 echo "Finished pipeline"
