@@ -1,3 +1,4 @@
+"""Define the RMSNorm module and its variants that use the CUDA kernels in the kernels directory"""
 import torch
 import torch.nn as nn
 from loguru import logger
@@ -8,6 +9,10 @@ rms_norm_cuda_fast = load(name='rms_norm_cuda_fast', sources=['kernels/rms_norm_
 rms_norm_cuda_fp16 = load(name='rms_norm_cuda_fp16', sources=['kernels/rms_norm_kernel_fp16.cu'], build_directory='kernels/build', verbose=True)
 
 class RMSNorm(nn.Module):
+    """
+    RMSNorm module that normalizes the hidden states using the root mean square of the hidden states.
+    Pytorch implemntation to compare against the CUDA implementation.
+    """
     def __init__(self, hidden_size, eps=1e-6):
         super().__init__()
         torch.manual_seed(42)
@@ -24,6 +29,9 @@ class RMSNorm(nn.Module):
         return self.weight * hidden_states
 
 class RMSNormBase(RMSNorm):
+    """
+    Base RMSNorm module that uses the CUDA kernel rms_norm_kernel_base.cu in the kernels directory.
+    """
     def __init__(self, hidden_size, eps=1e-6):
         super().__init__(hidden_size, eps=1e-6)
         self.rms_kernel = rms_norm_cuda_base.rms_norm_kernel
@@ -40,11 +48,19 @@ class RMSNormBase(RMSNorm):
         return output
 
 class RMSNormFast(RMSNormBase):
+    """
+    Fast RMSNorm module that uses the CUDA kernel rms_norm_kernel_fast.cu in the kernels directory.
+    This one does all computations and memory accesses 32 bit floating point precision.
+    """
     def __init__(self, hidden_size, eps=1e-6):
         super().__init__(hidden_size, eps=1e-6)
         self.rms_kernel = rms_norm_cuda_fast.rms_norm_kernel
 
 class RMSNormFP16(nn.Module):
+    """
+    RMSNorm module that uses the CUDA kernel rms_norm_kernel_fp16.cu in the kernels directory.
+    This one does the computations and memory accesses in 16 bit floating point precision except the inverse square root.
+    """
     def __init__(self, hidden_size, eps=1e-6):
         super().__init__()
         torch.manual_seed(42)

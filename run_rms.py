@@ -1,3 +1,4 @@
+"""File to run the Pytorch RMSNorm and the CUDA kernel versions of RMSNorm."""
 import torch
 from loguru import logger
 import sys
@@ -18,6 +19,12 @@ def configure_logger():
     logger.level("INFO", icon="ℹ︎")
 
 def debug_outputs():
+    """
+    This function demonstrates the usage of different RMSNorm implementations in PyTorch.
+    It initializes a random tensor and applies RMSNorm using different implementations.
+    The outputs of each implementation are printed along with the mean absolute difference
+    between the outputs of different implementations.
+    """
     batch_size, query_length, model_dim = 2, 2, 4096
     arr = torch.randn(batch_size, query_length, model_dim).cuda()
     print(arr[:2,:2,:4])
@@ -50,6 +57,9 @@ def debug_outputs():
     logger.info("Finished RMSNorm FP16")
 
 def run_rmsnorm():
+    """
+    Run the RMSNorm implementations on a large tensor to compare the performance.
+    """
     batch_size, nbatches = 32, 20
     query_length, model_dim = 1000, 4096
     arr = torch.randn(batch_size * nbatches, query_length, model_dim)
